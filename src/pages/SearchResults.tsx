@@ -1,4 +1,5 @@
 import { useSearchParams } from 'react-router-dom'
+import SearchBar from '../components/SearchBar'
 
 export default function SearchResults() {
   const [searchParams] = useSearchParams()
@@ -8,6 +9,7 @@ export default function SearchResults() {
   return (
     <div>
       <h1 className="text-2xl font-semibold">Search Results</h1>
+      <SearchBar />
       <p>City: {city}</p>
       <p>Check-in Date: {checkin}</p>
       <p>The Search Bar will be here: City or Hotel name | check in date | check out date | travelers (including adults and children). Data should persist when navigating to a different page</p>
