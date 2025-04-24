@@ -1,20 +1,24 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useSearchStore } from '../stores/useSearchStore'
-import { useNavigate } from 'react-router-dom'
 
 export default function SearchBar() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { searchParams, updateSearchParams } = useSearchStore()
-  const { query, checkin, checkout, adults, children } = searchParams
 
-  const handleChange = (key: keyof typeof searchParams) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = e.target.type === 'number' ? Number(e.target.value) : e.target.value
-    updateSearchParams({ [key]: value } as any)
-  }
+  // local state kept in sync with global
+  const [query, setQuery] = useState(searchParams.query)
+  const [checkin, setCheckin] = useState(searchParams.checkin)
+  const [checkout, setCheckout] = useState(searchParams.checkout)
+  const [adults, setAdults] = useState(searchParams.adults)
+  const [children, setChildren] = useState(searchParams.children)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    updateSearchParams({ query, checkin, checkout, adults, children })
+  }, [query, checkin, checkout, adults, children, updateSearchParams])
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const params = new URLSearchParams({
       query,
@@ -23,63 +27,79 @@ export default function SearchBar() {
       adults: adults.toString(),
       children: children.toString(),
     })
-    navigate(`/search?${params.toString()}`)
+    navigate(`/search?${params}`, {
+      replace: location.pathname === '/search',
+    })
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg shadow-md grid grid-cols-1 gap-4 sm:grid-cols-4 lg:grid-cols-6 items-end">
-      <div>
-        <label className="block text-sm font-medium text-gray-700">City or Hotel</label>
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-wrap items-end bg-white p-6 rounded-xl shadow-lg gap-4 max-w-4xl mx-auto"
+    >
+      <div className="flex flex-col flex-1 min-w-[200px]">
+        <label className="text-sm font-medium text-gray-700 mb-1">
+          City or Hotel
+        </label>
         <input
           type="text"
-          value={query}
-          onChange={handleChange('query')}
           placeholder="e.g. Seattle or Cedarbrook"
-          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Check-in</label>
+
+      <div className="flex flex-col">
+        <label className="text-sm font-medium text-gray-700 mb-1">
+          Check-in
+        </label>
         <input
           type="date"
           value={checkin}
-          onChange={handleChange('checkin')}
-          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          onChange={(e) => setCheckin(e.target.value)}
+          className="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Check-out</label>
+
+      <div className="flex flex-col">
+        <label className="text-sm font-medium text-gray-700 mb-1">
+          Check-out
+        </label>
         <input
           type="date"
           value={checkout}
-          onChange={handleChange('checkout')}
-          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          onChange={(e) => setCheckout(e.target.value)}
+          className="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Adults</label>
+
+      <div className="flex flex-col">
+        <label className="text-sm font-medium text-gray-700 mb-1">Adults</label>
         <input
           type="number"
           min={1}
           value={adults}
-          onChange={handleChange('adults')}
-          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          onChange={(e) => setAdults(Number(e.target.value))}
+          className="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Children</label>
+
+      <div className="flex flex-col">
+        <label className="text-sm font-medium text-gray-700 mb-1">Children</label>
         <input
           type="number"
           min={0}
           value={children}
-          onChange={handleChange('children')}
-          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          onChange={(e) => setChildren(Number(e.target.value))}
+          className="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
-      <div className="sm:col-span-4 lg:col-span-1 text-right">
+
+      <div className="flex flex-1 justify-center md:justify-end">
         <button
           type="submit"
-          className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md transition"
         >
           Search
         </button>
