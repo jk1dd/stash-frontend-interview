@@ -1,24 +1,35 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import logo from '../assets/logo.svg'
 
 export default function Navbar() {
+  const { pathname } = useLocation()
+  const isHome = pathname === '/'
+
   return (
-    <header className="mb-4 flex flex-col sm:flex-row items-center justify-between">
+    <header className="flex items-center justify-between px-6 py-4 bg-white shadow">
       <Link to="/" className="flex items-center space-x-2">
-        <img src={logo} alt="Lodging Lookabout logo" className="h-12 w-12" />
-        <span className="text-3xl font-extrabold text-indigo-600 hover:text-indigo-800">
+        {!isHome && <img src={logo} alt="Logo" className="h-10 w-10" />}
+        {!isHome && <span className="text-2xl font-extrabold text-indigo-600">
           Lodging Lookabout
-        </span>
+        </span>}
       </Link>
 
-      <nav className="mt-2 sm:mt-0 space-x-4 text-lg">
-        <Link to="/" className="text-blue-500 hover:underline">
-          Home
-        </Link>
-        <Link to="/hotels" className="text-blue-500 hover:underline">
-          All Hotels
-        </Link>
-      </nav>
+      {!isHome && (
+        <nav className="space-x-6">
+          <Link
+            to="/"
+            className="text-indigo-600 hover:underline hover:text-indigo-800"
+          >
+            Home
+          </Link>
+          <Link
+            to="/hotels"
+            className="text-indigo-600 hover:underline hover:text-indigo-800"
+          >
+            All Hotels
+          </Link>
+        </nav>
+      )}
     </header>
-  )
+)
 }
