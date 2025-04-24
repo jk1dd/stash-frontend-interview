@@ -23,7 +23,11 @@ const HotelIndex = () => {
               <div className="p-4">
                 <h2 className="text-lg font-bold mb-1">{hotel.name}</h2>
                 <p className="text-gray-600 mb-1">{hotel.city}</p>
-                <p className="text-indigo-600 font-semibold">${hotel.daily_rate}</p>
+                {hotel.has_member_rate ? (
+                  <p className="text-green-600 font-semibold">${hotel.daily_rate.toFixed(2)} - member rate applied!</p>
+                ) : (
+                  <p className="text-indigo-600 font-semibold">${hotel.daily_rate.toFixed(2)}</p>
+                )}
               </div>
             </Link>
           </li>

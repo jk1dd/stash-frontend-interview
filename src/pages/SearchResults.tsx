@@ -33,7 +33,7 @@ export default function SearchResults() {
               <div className="p-4">
                 <h2 className="text-lg font-bold mb-1">{hotel.name}</h2>
                 <p className="text-gray-600 mb-1">{hotel.city}</p>
-                <p className="text-indigo-600 font-semibold">${hotel.daily_rate}</p>
+                <p className="text-indigo-600 font-semibold">${hotel.daily_rate.toFixed(2)}</p>
               </div>
             </li>
           ))}
