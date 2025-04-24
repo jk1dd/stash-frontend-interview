@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 type SearchParams = {
-  city: string;
+  query: string;
   checkin: string;
   checkout: string;
   adults: number;
@@ -15,7 +15,7 @@ type SearchState = {
 
 export const useSearchStore = create<SearchState>((set) => ({
   searchParams: {
-    city: '',
+    query: '',
     checkin: '',
     checkout: '',
     adults: 1,
