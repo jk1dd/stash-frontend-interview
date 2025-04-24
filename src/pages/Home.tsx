@@ -1,18 +1,25 @@
-import { Link } from 'react-router-dom'
 import SearchBar from '../components/SearchBar'
+import { Link } from 'react-router-dom'
+import logo from '../assets/logo.svg'
 
 export default function Home() {
   return (
-    <div className="p-4 max-w-xl mx-auto text-center">
-      <SearchBar />
-      <div className="mt-6">
-        <Link
-          to="/hotels"
-          className="inline-block text-indigo-600 hover:underline font-medium"
-        >
-          View All Hotels
-        </Link>
+    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
+      <h1 className="text-5xl font-extrabold text-indigo-600 mb-8 flex items-center">
+        <img src={logo} alt="Logo" className="h-12 w-12 mr-3" />
+        Lodging Lookabout
+      </h1>
+
+      <div className="w-full max-w-4xl mb-10">
+        <SearchBar />
       </div>
-    </div>
+
+      <Link
+        to="/hotels"
+        className="text-indigo-600 font-medium hover:underline mt-4"
+      >
+        View All Hotels →
+      </Link>
+    </main>
   )
 }
