@@ -19,15 +19,15 @@ const HotelMicrosite = () => {
   if (!hotel) { return <div>Loading...</div>; }
 
   return (
-    <div>
+    <div className="p-4 max-w-3xl mx-auto">
       <SearchBar />
-      <h1 className="text-2xl font-semibold">{hotel.name}</h1>
-      <img src={hotel.image} alt={hotel.name} className="w-full h-auto mb-4" />
-      <p className="text-lg">Location: {hotel.city}</p>
-      <p className="text-lg">Daily Rate: ${hotel.daily_rate}</p>
-      <p className="text-lg">Has Member Rate: {hotel.has_member_rate.toString()}</p>
-      </div>
-  )
+      <h1 className="text-3xl font-bold mb-4">{hotel.name}</h1>
+      <img src={hotel.image} alt={hotel.name} className="w-full h-64 object-cover mb-4 rounded" />
+      <p className="text-gray-700 mb-2"><strong>City:</strong> {hotel.city}</p>
+      <p className="text-gray-700 mb-2"><strong>Rate:</strong> ${hotel.daily_rate}</p>
+      {hotel.has_member_rate && <p className="text-green-600 font-semibold">Member rate applied!</p>}
+    </div>
+  );
 
 }
 
