@@ -1,15 +1,34 @@
 import { useParams } from 'react-router-dom'
 import SearchBar from '../components/SearchBar'
+import { useHotelStore } from '../stores/useHotelStore';
+import { useEffect } from 'react';
 
-export default function HotelMicrosite() {
-  const { hotelId } = useParams()
+
+const HotelMicrosite = () => {
+  const { hotelId } = useParams();
+  const { hotels, fetchHotels } = useHotelStore();
+
+  useEffect(() => {
+    if (!hotels.length) {
+      fetchHotels();
+    }
+  }, [fetchHotels, hotels.length]);
+
+  const hotel = hotels.find((hotel) => hotel.id.toString() === hotelId);
+
+  if (!hotel) { return <div>Loading...</div>; }
+
   return (
-      <div>
-        <SearchBar />
-        <h1 className="text-2xl">Hotel Details for: {hotelId}</h1>
-        <p>The Search Bar will be here: City or Hotel name | check in date | check out date | travelers (including adults and children). Data should persist when navigating to a different page</p>
-        <p>A hotel "microsite" page that displays information specific to an individual hotel. You can use our current microsite page for inspiration. This page can be lightly scaffolded, as it is not the main focus of the project. You should not spend significant time here.</p>
+    <div>
+      <SearchBar />
+      <h1 className="text-2xl font-semibold">{hotel.name}</h1>
+      <img src={hotel.image} alt={hotel.name} className="w-full h-auto mb-4" />
+      <p className="text-lg">Location: {hotel.city}</p>
+      <p className="text-lg">Daily Rate: ${hotel.daily_rate}</p>
+      <p className="text-lg">Has Member Rate: {hotel.has_member_rate.toString()}</p>
       </div>
-    )
-    
+  )
+
 }
+
+export default HotelMicrosite;
