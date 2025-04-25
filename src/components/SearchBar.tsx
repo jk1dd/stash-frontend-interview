@@ -42,7 +42,7 @@ export default function SearchBar() {
         bg-white p-6 rounded-xl shadow-lg
         ${isHome
           ? 'flex flex-col space-y-4 max-w-md mx-auto'
-          : 'flex flex-col lg:flex-row lg:items-end gap-4 max-w-4xl mx-auto'
+          : 'flex flex-col lg:flex-row lg:items-end gap-4 max-w-4xl mx-auto mb-10'
         }
       `}
     >
