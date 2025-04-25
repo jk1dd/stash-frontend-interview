@@ -83,7 +83,7 @@ export default function SearchBar() {
         </label>
         <input
           type="text"
-          placeholder="e.g. Seattle or Cedarbrook"
+          placeholder="e.g. Denver or Bay"
           className={`${inputBaseStyle} w-full`}
           value={query}
           onChange={(e) => setQuery(e.target.value)}

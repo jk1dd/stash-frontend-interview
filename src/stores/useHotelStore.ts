@@ -1,5 +1,4 @@
 import { create } from "zustand"
-// import data from "../data/data.json"
 
 export type Hotel = {
   name: string
