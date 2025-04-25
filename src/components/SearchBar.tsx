@@ -8,14 +8,43 @@ export default function SearchBar() {
   const isHome = pathname === '/'
   const { searchParams, updateSearchParams } = useSearchStore()
 
-  // local form state, from global store
+  // date helpers
+  const today = new Date()
+  const toIso = (d: Date) => d.toISOString().split('T')[0]
+
+  // Default: a 1-night stay starting two days out
+  const d1 = new Date(today)
+  d1.setDate(d1.getDate() + 2)
+  const d2 = new Date(d1)
+  d2.setDate(d2.getDate() + 1)
+
+  // Local form state (from store or defaults)
   const [query, setQuery] = useState(searchParams.query)
-  const [checkin, setCheckin] = useState(searchParams.checkin)
-  const [checkout, setCheckout] = useState(searchParams.checkout)
+  const [checkin, setCheckin] = useState(
+    searchParams.checkin || toIso(d1)
+  )
+  const [checkout, setCheckout] = useState(
+    searchParams.checkout || toIso(d2)
+  )
   const [adults, setAdults] = useState(searchParams.adults)
   const [children, setChildren] = useState(searchParams.children)
 
-  // sync back to store on search
+  // min checkin and checkout
+  const minCheckin = toIso(today)
+  const minCheckout = (() => {
+    const m = new Date(checkin)
+    m.setDate(m.getDate() + 1)
+    return toIso(m)
+  })()
+
+  // checkout ≥ checkin + 1
+  useEffect(() => {
+    if (checkout < minCheckout) {
+      setCheckout(minCheckout)
+    }
+  }, [checkout, minCheckout])
+
+  // Sync back to global store
   useEffect(() => {
     updateSearchParams({ query, checkin, checkout, adults, children })
   }, [query, checkin, checkout, adults, children, updateSearchParams])
@@ -29,10 +58,12 @@ export default function SearchBar() {
       adults: adults.toString(),
       children: children.toString(),
     })
-    navigate(`/search?${params}`, { replace: pathname === '/search' })
+    navigate(`/search?${params}`, {
+      replace: pathname === '/search',
+    })
   }
 
-  const inputBase =
+  const inputBaseStyle =
     'h-12 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
 
   return (
@@ -53,7 +84,7 @@ export default function SearchBar() {
         <input
           type="text"
           placeholder="e.g. Seattle or Cedarbrook"
-          className={`${inputBase} w-full`}
+          className={`${inputBaseStyle} w-full`}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -65,7 +96,8 @@ export default function SearchBar() {
         </label>
         <input
           type="date"
-          className={`${inputBase} w-full`}
+          className={`${inputBaseStyle} w-full`}
+          min={minCheckin}
           value={checkin}
           onChange={(e) => setCheckin(e.target.value)}
         />
@@ -77,7 +109,8 @@ export default function SearchBar() {
         </label>
         <input
           type="date"
-          className={`${inputBase} w-full`}
+          className={`${inputBaseStyle} w-full`}
+          min={minCheckout}
           value={checkout}
           onChange={(e) => setCheckout(e.target.value)}
         />
@@ -90,7 +123,7 @@ export default function SearchBar() {
         <input
           type="number"
           min={1}
-          className={`${inputBase} w-full text-center`}
+          className={`${inputBaseStyle} w-full text-center`}
           value={adults}
           onChange={(e) => setAdults(Number(e.target.value))}
         />
@@ -103,7 +136,7 @@ export default function SearchBar() {
         <input
           type="number"
           min={0}
-          className={`${inputBase} w-full text-center`}
+          className={`${inputBaseStyle} w-full text-center`}
           value={children}
           onChange={(e) => setChildren(Number(e.target.value))}
         />
